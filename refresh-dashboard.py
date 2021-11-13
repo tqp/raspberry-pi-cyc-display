@@ -2,19 +2,20 @@
 # -*- coding:utf-8 -*-
 import sys
 import os
+import logging
+import time
+import traceback
+import subprocess
+import pytz
+import dateutil.parser
+from PIL import Image,ImageDraw,ImageFont
+from datetime import datetime
+
 picdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pic')
 libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
 if os.path.exists(libdir):
     sys.path.append(libdir)
-
-import logging
 from waveshare_epd import epd7in5_V2
-import time
-from PIL import Image,ImageDraw,ImageFont
-import traceback
-import subprocess
-import pytz
-from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -102,29 +103,42 @@ try:
     # PiSugar2 Battery Level
     # echo "get battery" | nc -q 0 127.0.0.1 8423
     battery_percentage = subprocess.check_output('echo \"get battery\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
+    battery_percentage = battery_percentage.replace("singlebattery: ", "")
     battery_percentage = battery_percentage.replace("battery: ", "")
     battery_percentage = "{:.1f}".format(float(battery_percentage)) + "%"
     isBatteryCharging = subprocess.check_output('echo \"get battery_charging\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
     drawBlack.text((10, 462), 'Battery: ' + battery_percentage, font = font12, fill = 1)
 
-    # IP Address
+    # IP Address (not usually available when this script is run on restart)
     # /sbin/ip -o -4 addr list wlan0 | awk '{print $4}' | cut -d/ -f1
-    ip_address = subprocess.check_output('ifconfig wlan0 | grep \'inet \' | awk \'{print $2}\'', shell=True, text=True)
-    ip_address_display = 'IP: ' + ip_address
-    drawBlack.text((164, 462), ip_address_display, font = font12, fill = 1)
-
-    # Footer Right
+    #ip_address = subprocess.check_output('ifconfig wlan0 | grep \'inet \' | awk \'{print $2}\'', shell=True, text=True)
+    #ip_address_display = 'IP: ' + ip_address
+    #drawBlack.text((164, 462), ip_address_display, font = font12, fill = 1)
+    
+    # Last Updated
     tz = pytz.timezone('America/New_York') # America/Chicago
     date_time_obj = datetime.now(tz)
-    last_updated = date_time_obj.strftime("%d-%b-%Y %H:%M:%S") + ' '
-    drawBlack.text((580, 462), 'Last Updated: ' + last_updated, font = font12, fill = 1)    
+    last_update = date_time_obj.strftime('%d-%^b-%Y %H:%M') + ' '
+    drawBlack.text((450, 462), 'Last Update: ' + last_update, font = font12, fill = 1)    
 
-    logging.info("Drawing...")  
+    # Next Update
+    # echo "get rtc_alarm_time" | nc -q 0 127.0.0.1 8423
+    next_update = subprocess.check_output('echo \"get rtc_alarm_time\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
+    next_update = next_update.replace("singlertc_alarm_time: ", "")
+    next_update = next_update.replace("rtc_alarm_time: ", "")
+    next_update = next_update.replace("\n", "")
+    utctime = dateutil.parser.parse(next_update)
+    localtime = utctime.astimezone(tz)
+    drawBlack.text((680, 462), 'Next Update: ' + str(localtime.strftime('%H:%M')) + "  ", font = font12, fill = 1)
+    
+    logging.info('Drawing...')  
     epd.display(epd.getbuffer(blackImage))
     #epd.display(epd.getbuffer(blackImage), epd.getbuffer(redImage))
 
-    logging.info("Time to sleep...")
+    logging.info('Time to sleep...')
     epd.sleep()
+
+    exit()
     
 except IOError as e:
     logging.info(e)

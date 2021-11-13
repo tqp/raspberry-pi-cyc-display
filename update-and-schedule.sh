@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 echo "Running update-and-schedule.sh" >> log.txt 
 
-echo "Refresh Display"
-python3 ./refresh-dashboard.py
+WAKEUP_AFTER=600
+echo "WAKEUP_AFTER: $WAKEUP_AFTER"
 
 rtc_time=$(echo "get rtc_time" | nc -q 0 127.0.0.1 8423)
 echo "rtc_time      : " + $rtc_time
@@ -11,10 +13,7 @@ echo "rtc_time      : " + $rtc_time
 rtc_alarm_time=$(echo "get rtc_alarm_time" | nc -q 0 127.0.0.1 8423)
 echo "rtc_alarm_time: " + $rtc_alarm_time
 
-SHUTDOWN_AFTER=60
-echo "SHUTDOWN_AFTER: $SHUTDOWN_AFTER"
-WAKEUP_AFTER=3600 
-echo "WAKEUP_AFTER: $WAKEUP_AFTER"
+ready_for_shutdown=false
 
 if [[ x"$rtc_time" =~ "rtc_time:" ]]; then
     rtc_time=${rtc_time#*" "}
@@ -32,10 +31,10 @@ if [[ x"$rtc_time" =~ "rtc_time:" ]]; then
     echo "r: $r"
 
     if [[ x"$r" =~ "done" ]]; then
-        #echo "Sleeping for $SHUTDOWN_AFTER seconds before shutting down."
-        # Sleep for n seconds then poweroff
-        #sleep $SHUTDOWN_AFTER
-        sudo shutdown -h +2 "Shutting down in two minutes."
+        echo "Ready for shutdown."
+        rtc_alarm_time_new=$(echo "get rtc_alarm_time" | nc -q 0 127.0.0.1 8423)
+        echo "New Alarm Time: $rtc_alarm_time_new"
+        ready_for_shutdown=true
     else
         echo "Error: Could not set RTC wakeup time."
         exit 1
@@ -45,4 +44,18 @@ else
     exit 1
 fi
 
+# Refresh Display
+echo "Refresh Display"
+/usr/bin/python3 /home/pi/cyc-display/refresh-dashboard.py
 
+# Sleep for 30 seconds to allow for logon.
+echo "Initiating shutdown in 30 seconds..."
+sleep 30
+
+if [ $ready_for_shutdown ]; then
+    echo "Scheduling shutdown in one minute..."
+    #sudo shutdown -h +1 "Shutting down in one minute."
+else
+    echo "Error: Could not set RTC wakeup time."
+    exit 1
+fi
