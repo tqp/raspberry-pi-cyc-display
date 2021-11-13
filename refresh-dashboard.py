@@ -57,9 +57,15 @@ try:
 
     # Content Left
     line1 = 'Welcome'
-    line2 = '- Dinner is at 6pm'
-    drawBlack.text((10, 80), line1, font = font54, fill = 0)    
-    drawBlack.text((10, 142), line2, font = font36, fill = 0)    
+    line2 = '\u2022 Info Line 1'
+    line3 = '\u2022 Info Line 2'
+    line4 = '\u2022 Info Line 3'
+    line5 = '\u2022 Info Line 4'
+    drawBlack.text((10, 78), line1, font = font54, fill = 0)    
+    drawBlack.text((10, 145), line2, font = font36, fill = 0)    
+    drawBlack.text((10, 195), line3, font = font36, fill = 0)    
+    drawBlack.text((10, 245), line4, font = font36, fill = 0)    
+    drawBlack.text((10, 295), line5, font = font36, fill = 0)    
    
     # Content Right
     label1 = 'Distance to Nassau' + ' '
