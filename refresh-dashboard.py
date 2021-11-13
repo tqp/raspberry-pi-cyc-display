@@ -7,9 +7,12 @@ import time
 import traceback
 import subprocess
 import pytz
-import dateutil.parser
+import data
+import json
+#import dateutil.parser
 from PIL import Image,ImageDraw,ImageFont
 from datetime import datetime
+
 
 picdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pic')
 libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
@@ -56,17 +59,21 @@ try:
     bmp = Image.open(os.path.join(picdir, 'cyc_logo_100x70_white_on_black.png'))
     blackImage.paste(bmp, (695, 0))
 
+    file = open('data/data.json')
+    data = json.load(file)
+    day_id = 'day1'
+
     # Content Left
-    line1 = 'Welcome'
-    line2 = '\u2022 Info Line 1'
-    line3 = '\u2022 Info Line 2'
-    line4 = '\u2022 Info Line 3'
-    line5 = '\u2022 Info Line 4'
-    drawBlack.text((10, 78), line1, font = font54, fill = 0)    
-    drawBlack.text((10, 145), line2, font = font36, fill = 0)    
-    drawBlack.text((10, 195), line3, font = font36, fill = 0)    
-    drawBlack.text((10, 245), line4, font = font36, fill = 0)    
-    drawBlack.text((10, 295), line5, font = font36, fill = 0)    
+    header = data[day_id]['header']
+    line1 = '\u2022 ' + data[day_id]['line1']
+    line2 = '\u2022 ' + data[day_id]['line2']
+    line3 = '\u2022 ' + data[day_id]['line3']
+    line4 = '\u2022 ' + data[day_id]['line4']
+    drawBlack.text((10, 78), header, font = font54, fill = 0)    
+    drawBlack.text((10, 145), line1, font = font36, fill = 0)    
+    drawBlack.text((10, 195), line2, font = font36, fill = 0)    
+    drawBlack.text((10, 245), line3, font = font36, fill = 0)    
+    drawBlack.text((10, 295), line4, font = font36, fill = 0)    
    
     # Content Right
     label1 = 'Distance to Nassau' + ' '
@@ -104,6 +111,7 @@ try:
     # echo "get battery" | nc -q 0 127.0.0.1 8423
     battery_percentage = subprocess.check_output('echo \"get battery\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
     battery_percentage = battery_percentage.replace("singlebattery: ", "")
+    battery_percentage = battery_percentage.replace("longbattery: ", "")
     battery_percentage = battery_percentage.replace("battery: ", "")
     battery_percentage = "{:.1f}".format(float(battery_percentage)) + "%"
     isBatteryCharging = subprocess.check_output('echo \"get battery_charging\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
@@ -123,13 +131,13 @@ try:
 
     # Next Update
     # echo "get rtc_alarm_time" | nc -q 0 127.0.0.1 8423
-    next_update = subprocess.check_output('echo \"get rtc_alarm_time\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
-    next_update = next_update.replace("singlertc_alarm_time: ", "")
-    next_update = next_update.replace("rtc_alarm_time: ", "")
-    next_update = next_update.replace("\n", "")
-    utctime = dateutil.parser.parse(next_update)
-    localtime = utctime.astimezone(tz)
-    drawBlack.text((680, 462), 'Next Update: ' + str(localtime.strftime('%H:%M')) + "  ", font = font12, fill = 1)
+    #next_update = subprocess.check_output('echo \"get rtc_alarm_time\" | nc -q 0 127.0.0.1 8423', shell=True, text=True)
+    #next_update = next_update.replace("singlertc_alarm_time: ", "")
+    #next_update = next_update.replace("rtc_alarm_time: ", "")
+    #next_update = next_update.replace("\n", "")
+    #utctime = dateutil.parser.parse(next_update)
+    #localtime = utctime.astimezone(tz)
+    #drawBlack.text((680, 462), 'Next Update: ' + str(localtime.strftime('%H:%M')) + "  ", font = font12, fill = 1)
     
     #logging.info('Drawing...')  
     epd.display(epd.getbuffer(blackImage))

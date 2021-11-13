@@ -1,0 +1,38 @@
+2021-11-13 17:51:44: single button press
+2021-11-13 17:51:46: double button press
+2021-11-13 17:51:48: long button press
+\n2021-11-13 17:56:50: Running update-and-schedule:
+WAKEUP_AFTER: 120
+Current rtc_time: 2021-11-13T17:57:19+00:00
+Setting new wakeup_time to: 2021-11-13T17:59:19+00:00
+r: rtc_alarm_set: done
+Ready for shutdown.
+Confirming new wakeup_time: rtc_alarm_time: 2000-01-01T17:59:19+00:00
+Refresh Display
+INFO:root:CYC Dashboard
+DEBUG:waveshare_epd.epd7in5_V2:e-Paper busy
+DEBUG:waveshare_epd.epd7in5_V2:e-Paper busy release
+DEBUG:PIL.PngImagePlugin:STREAM b'IHDR' 16 13
+DEBUG:PIL.PngImagePlugin:STREAM b'iCCP' 41 787
+DEBUG:PIL.PngImagePlugin:iCCP profile name b'Dot Gain 20%'
+DEBUG:PIL.PngImagePlugin:Compression method 0
+DEBUG:PIL.PngImagePlugin:STREAM b'pHYs' 840 9
+DEBUG:PIL.PngImagePlugin:STREAM b'iTXt' 861 1880
+DEBUG:PIL.PngImagePlugin:STREAM b'IDAT' 2753 1613
+DEBUG:PIL.PngImagePlugin:STREAM b'IHDR' 16 13
+DEBUG:PIL.PngImagePlugin:STREAM b'pHYs' 41 9
+DEBUG:PIL.PngImagePlugin:STREAM b'iTXt' 62 1621
+DEBUG:PIL.PngImagePlugin:STREAM b'IDAT' 1695 3242
+DEBUG:waveshare_epd.epd7in5_V2:e-Paper busy
+DEBUG:waveshare_epd.epd7in5_V2:e-Paper busy release
+DEBUG:waveshare_epd.epd7in5_V2:e-Paper busy
+DEBUG:waveshare_epd.epd7in5_V2:e-Paper busy release
+DEBUG:waveshare_epd.epdconfig:spi end
+DEBUG:waveshare_epd.epdconfig:close 5V, Module enters 0 power consumption ...
+Initiating shutdown in 30 seconds...
+2021-11-13 17:57:12: single button press
+2021-11-13 17:57:12: Shutdown aborted.
+Scheduling shutdown in one minute...
+Shutdown scheduled for Sat 2021-11-13 17:59:02 UTC, use 'shutdown -c' to cancel.
+2021-11-13 17:58:12: single button press
+2021-11-13 17:58:12: Shutdown aborted.

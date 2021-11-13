@@ -2,19 +2,21 @@
 
 set -e
 
-echo "Running update-and-schedule at " 
+current_timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+echo "--------------------"
+echo "$current_timestamp: Running update-and-schedule:" 
 
 WAKEUP_AFTER=120
 echo "WAKEUP_AFTER: $WAKEUP_AFTER"
 
 rtc_time=$(echo "get rtc_time" | nc -q 0 127.0.0.1 8423)
-echo "Current rtc_time (1): " + $rtc_time
+#echo "Current rtc_time: " + $rtc_time
 
 ready_for_shutdown=false
 
 if [[ x"$rtc_time" =~ "rtc_time:" ]]; then
     rtc_time=${rtc_time#*" "}
-    echo "Current rtc_time (2): $rtc_time"
+    echo "Current rtc_time: $rtc_time"
 
     # Set next wakeup time
     wakeup_time=$(date -d $rtc_time +%s)
@@ -54,3 +56,4 @@ else
     echo "Error: Could not set RTC wakeup time."
     exit 1
 fi
+echo "--------------------"

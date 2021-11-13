@@ -1,4 +1,5 @@
 #!/bin/bash
 
+current_timestamp=$(date +"%Y-%m-%d %H:%M:%S")
 sudo shutdown -c
-echo "Shutdown aborted." >> /home/pi/logger/log.txt
+echo "$current_timestamp: Shutdown aborted." >> /home/pi/cyc-display/cyc-display.log

@@ -1,4 +1,5 @@
 #!/bin/bash
 
-echo "double button press" >> /home/pi/logger/log.txt
-sh /home/pi/logger/on-startup.sh
+current_timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+echo "$current_timestamp: double button press" >> /home/pi/cyc-display/cyc-display.log
+sh /home/pi/cyc-display/shutdown-abort.sh

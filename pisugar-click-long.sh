@@ -1,3 +1,4 @@
 #!/bin/bash
 
-echo "long button press" >> /home/pi/logger/log.txt
+current_timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+echo "$current_timestamp: long button press" >> /home/pi/cyc-display/cyc-display.log
