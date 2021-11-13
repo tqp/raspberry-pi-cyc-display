@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Running update-and-schedule.sh" >> log.txt 
+echo "Running update-and-schedule.sh" 
 
 WAKEUP_AFTER=600
 echo "WAKEUP_AFTER: $WAKEUP_AFTER"
@@ -54,7 +54,7 @@ sleep 30
 
 if [ $ready_for_shutdown ]; then
     echo "Scheduling shutdown in one minute..."
-    #sudo shutdown -h +1 "Shutting down in one minute."
+    sudo shutdown -h +1 "Shutting down in one minute."
 else
     echo "Error: Could not set RTC wakeup time."
     exit 1
