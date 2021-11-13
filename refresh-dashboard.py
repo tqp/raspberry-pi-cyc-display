@@ -35,7 +35,7 @@ try:
     #font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
     font12 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 12)
 
-    logging.info("H: %s, W: %s", epd.height, epd.width)
+    #logging.info("H: %s, W: %s", epd.height, epd.width)
 
     blackImage = Image.new('1', (epd.width, epd.height), 255)
     redImage = Image.new('1', (epd.width, epd.height), 255)
@@ -131,11 +131,11 @@ try:
     localtime = utctime.astimezone(tz)
     drawBlack.text((680, 462), 'Next Update: ' + str(localtime.strftime('%H:%M')) + "  ", font = font12, fill = 1)
     
-    logging.info('Drawing...')  
+    #logging.info('Drawing...')  
     epd.display(epd.getbuffer(blackImage))
     #epd.display(epd.getbuffer(blackImage), epd.getbuffer(redImage))
 
-    logging.info('Time to sleep...')
+    #logging.info('Time to sleep...')
     epd.sleep()
 
     exit()
